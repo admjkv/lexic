@@ -11,12 +11,31 @@ int main(void)
     // Seed the random number generator
     srand((unsigned int)time(NULL));
 
-    // List of words to guess
-    const char *words[] = {"apple", "banana", "cherry", "date", "elderberry"};
-    size_t num_words = sizeof(words) / sizeof(words[0]);
+    // Replace the current word list with categorized lists
+    const char *easy_words[] = {"apple", "banana", "cherry", "date", "fig"};
+    const char *medium_words[] = {"apricot", "blueberry", "coconut", "dragonfruit"};
+    const char *hard_words[] = {"elderberry", "jackfruit", "persimmon", "rambutan"};
 
-    // Select a random word from the list
-    const char *target = words[rand() % num_words];
+    // Add at beginning of main()
+    int difficulty;
+    printf("Select difficulty level:\n");
+    printf("1. Easy\n2. Medium\n3. Hard\n");
+    printf("Enter your choice (1-3): ");
+    scanf("%d", &difficulty);
+
+    // Select word based on difficulty
+    const char *target;
+    switch(difficulty) {
+        case 3:
+            target = hard_words[rand() % (sizeof(hard_words) / sizeof(hard_words[0]))];
+            break;
+        case 2:
+            target = medium_words[rand() % (sizeof(medium_words) / sizeof(medium_words[0]))];
+            break;
+        default:
+            target = easy_words[rand() % (sizeof(easy_words) / sizeof(easy_words[0]))];
+    }
+
     size_t target_length = strlen(target);
 
     // Array to track which letters have been guessed correctly
