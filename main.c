@@ -26,6 +26,8 @@ int main(void)
         guessed[i] = false;
     }
 
+    bool used_letters[26] = {false}; // Track used letters (a-z)
+
     int incorrect_guesses = 0;
     char guess;
     bool word_complete = false;
@@ -44,9 +46,24 @@ int main(void)
         }
         printf("\n");
 
+        printf("Used letters: ");
+        for (char c = 'a'; c <= 'z'; c++) {
+            if (used_letters[c - 'a']) {
+                printf("%c ", c);
+            }
+        }
+        printf("\n");
+
         // Prompt user for a letter
         printf("Enter a letter: ");
         scanf(" %1c", &guess);
+
+        if (used_letters[guess - 'a']) {
+            printf("You already guessed '%c'. Try another letter.\n", guess);
+            continue;
+        } else {
+            used_letters[guess - 'a'] = true;
+        }
 
         // Check if the guessed letter is in the word
         bool correct = false;
