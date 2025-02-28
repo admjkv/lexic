@@ -11,19 +11,35 @@ int main(void)
     // Seed the random number generator
     srand((unsigned int)time(NULL));
 
-    // Replace the current word list with categorized lists
+    // Different levels of difficulty has different complexity of words
     const char *easy_words[] = {"apple", "banana", "cherry", "date", "fig"};
     const char *medium_words[] = {"apricot", "blueberry", "coconut", "dragonfruit"};
     const char *hard_words[] = {"elderberry", "jackfruit", "persimmon", "rambutan"};
 
-    // Add at beginning of main()
+    // Input validation for difficulty level
     int difficulty;
-    printf("Select difficulty level:\n");
-    printf("1. Easy\n2. Medium\n3. Hard\n");
-    printf("Enter your choice (1-3): ");
-    scanf("%d", &difficulty);
+    int valid_input = 0;
+    
+    while (!valid_input) {
+        printf("Select difficulty level:\n");
+        printf("1. Easy\n2. Medium\n3. Hard\n");
+        printf("Enter your choice (1-3): ");
+        
+        if (scanf("%d", &difficulty) != 1) {
+            // Clear input buffer if non-numeric input
+            while (getchar() != '\n');
+            printf("Invalid input. Please enter a number.\n\n");
+            continue;
+        }
+        
+        if (difficulty >= 1 && difficulty <= 3) {
+            valid_input = 1;
+        } else {
+            printf("Please enter a number between 1 and 3.\n\n");
+        }
+    }
 
-    // Select word based on difficulty
+    // Select word by chosen difficulty
     const char *target;
     switch(difficulty) {
         case 3:
