@@ -92,6 +92,7 @@ int main(void)
         // Prompt user for a letter
         printf("Enter a letter: ");
         scanf(" %1c", &guess);
+        while (getchar() != '\n'); // Clear input buffer
 
         // Validation for letter input
         if (guess < 'a' || guess > 'z') {
