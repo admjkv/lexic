@@ -93,6 +93,12 @@ int main(void)
         printf("Enter a letter: ");
         scanf(" %1c", &guess);
 
+        // Validation for letter input
+        if (guess < 'a' || guess > 'z') {
+            printf("Please enter a lowercase letter (a-z).\n");
+            continue;
+        }
+
         if (used_letters[guess - 'a']) {
             printf("You already guessed '%c'. Try another letter.\n", guess);
             continue;
