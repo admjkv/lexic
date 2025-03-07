@@ -141,5 +141,14 @@ int main(void)
     else
         printf("Game over! The word was: %s\n", target);
 
+    char play_again;
+    printf("Would you like to play again? (y/n): ");
+    scanf(" %1c", &play_again);
+    if (play_again == 'y' || play_again == 'Y') {
+        // Clear screen for new game
+        system("clear");
+        main(); // Restart the game
+    }
+
     return 0;
 }
