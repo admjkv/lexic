@@ -6,17 +6,84 @@
 
 #define MAX_GUESSES 6
 
-int main(void)
-{
-    // Seed the random number generator
-    srand((unsigned int)time(NULL));
+// Word lists moved to global scope
+const char *easy_words[] = {"apple", "banana", "cherry", "date", "fig"};
+const char *medium_words[] = {"apricot", "blueberry", "coconut", "dragonfruit"};
+const char *hard_words[] = {"elderberry", "jackfruit", "persimmon", "rambutan"};
 
-    // Different levels of difficulty has different complexity of words
-    const char *easy_words[] = {"apple", "banana", "cherry", "date", "fig"};
-    const char *medium_words[] = {"apricot", "blueberry", "coconut", "dragonfruit"};
-    const char *hard_words[] = {"elderberry", "jackfruit", "persimmon", "rambutan"};
+// Function to display hangman ASCII art
+void display_hangman(int incorrect_guesses) {
+    printf("\n");
+    switch (incorrect_guesses) {
+        case 0:
+            printf("  +---+\n");
+            printf("  |   |\n");
+            printf("      |\n");
+            printf("      |\n");
+            printf("      |\n");
+            printf("      |\n");
+            printf("=========\n");
+            break;
+        case 1:
+            printf("  +---+\n");
+            printf("  |   |\n");
+            printf("  O   |\n");
+            printf("      |\n");
+            printf("      |\n");
+            printf("      |\n");
+            printf("=========\n");
+            break;
+        case 2:
+            printf("  +---+\n");
+            printf("  |   |\n");
+            printf("  O   |\n");
+            printf("  |   |\n");
+            printf("      |\n");
+            printf("      |\n");
+            printf("=========\n");
+            break;
+        case 3:
+            printf("  +---+\n");
+            printf("  |   |\n");
+            printf("  O   |\n");
+            printf(" /|   |\n");
+            printf("      |\n");
+            printf("      |\n");
+            printf("=========\n");
+            break;
+        case 4:
+            printf("  +---+\n");
+            printf("  |   |\n");
+            printf("  O   |\n");
+            printf(" /|\\  |\n");
+            printf("      |\n");
+            printf("      |\n");
+            printf("=========\n");
+            break;
+        case 5:
+            printf("  +---+\n");
+            printf("  |   |\n");
+            printf("  O   |\n");
+            printf(" /|\\  |\n");
+            printf(" /    |\n");
+            printf("      |\n");
+            printf("=========\n");
+            break;
+        case 6:
+            printf("  +---+\n");
+            printf("  |   |\n");
+            printf("  O   |\n");
+            printf(" /|\\  |\n");
+            printf(" / \\  |\n");
+            printf("      |\n");
+            printf("=========\n");
+            break;
+    }
+    printf("\n");
+}
 
-    // Input validation for difficulty level
+// Function to get difficulty level from user
+int get_difficulty() {
     int difficulty;
     int valid_input = 0;
     
@@ -32,14 +99,21 @@ int main(void)
             continue;
         }
         
+        // Clear input buffer
+        while (getchar() != '\n');
+        
         if (difficulty >= 1 && difficulty <= 3) {
             valid_input = 1;
         } else {
             printf("Please enter a number between 1 and 3.\n\n");
         }
     }
+    
+    return difficulty;
+}
 
-    // Select word by chosen difficulty
+// Function to select target word based on difficulty
+const char* select_word(int difficulty) {
     const char *target;
     switch(difficulty) {
         case 3:
@@ -51,29 +125,35 @@ int main(void)
         default:
             target = easy_words[rand() % (sizeof(easy_words) / sizeof(easy_words[0]))];
     }
+    return target;
+}
 
+// Function to play one round of the game
+bool play_game() {
+    int difficulty = get_difficulty();
+    const char *target = select_word(difficulty);
     size_t target_length = strlen(target);
 
     // Array to track which letters have been guessed correctly
     bool guessed[target_length];
-    for (size_t i = 0; i < target_length; i++)
-    {
+    for (size_t i = 0; i < target_length; i++) {
         guessed[i] = false;
     }
 
     bool used_letters[26] = {false}; // Track used letters (a-z)
-
     int incorrect_guesses = 0;
-    char guess;
     bool word_complete = false;
 
+    system("clear"); // Start with a clean screen
+
     // Game loop
-    while (incorrect_guesses < MAX_GUESSES && !word_complete)
-    {
+    while (incorrect_guesses < MAX_GUESSES && !word_complete) {
+        // Display hangman
+        display_hangman(incorrect_guesses);
+        
         // Display the current progress
         printf("Word: ");
-        for (size_t i = 0; i < target_length; i++)
-        {
+        for (size_t i = 0; i < target_length; i++) {
             if (guessed[i])
                 printf("%c", target[i]);
             else
@@ -89,10 +169,18 @@ int main(void)
         }
         printf("\n");
 
+        printf("Incorrect guesses: %d/%d\n", incorrect_guesses, MAX_GUESSES);
+
         // Prompt user for a letter
-        printf("Enter a letter: ");
-        scanf(" %1c", &guess);
+        printf("Enter a letter (or '!' to quit): ");
+        char guess;
+        scanf(" %c", &guess);
         while (getchar() != '\n'); // Clear input buffer
+
+        if (guess == '!') {
+            printf("Game aborted. The word was: %s\n", target);
+            return false;
+        }
 
         // Validation for letter input
         if (guess < 'a' || guess > 'z') {
@@ -109,46 +197,64 @@ int main(void)
 
         // Check if the guessed letter is in the word
         bool correct = false;
-        for (size_t i = 0; i < target_length; i++)
-        {
-            if (target[i] == guess)
-            {
+        for (size_t i = 0; i < target_length; i++) {
+            if (target[i] == guess) {
                 guessed[i] = true;
                 correct = true;
             }
         }
 
-        if (!correct)
-        {
+        if (!correct) {
             incorrect_guesses++;
             printf("Incorrect guess! You have %d guesses left.\n", MAX_GUESSES - incorrect_guesses);
         }
 
         // Check if the whole word is guessed
         word_complete = true;
-        for (size_t i = 0; i < target_length; i++)
-        {
-            if (!guessed[i])
-            {
+        for (size_t i = 0; i < target_length; i++) {
+            if (!guessed[i]) {
                 word_complete = false;
                 break;
             }
         }
+        
+        system("clear"); // Clear screen for next round
     }
 
+    // Final display
+    display_hangman(incorrect_guesses);
+    
     if (word_complete)
         printf("Congratulations! You guessed the word: %s\n", target);
     else
         printf("Game over! The word was: %s\n", target);
+        
+    return true;
+}
 
-    char play_again;
-    printf("Would you like to play again? (y/n): ");
-    scanf(" %1c", &play_again);
-    if (play_again == 'y' || play_again == 'Y') {
-        // Clear screen for new game
-        system("clear");
-        main(); // Restart the game
+int main(void) {
+    // Seed the random number generator
+    srand((unsigned int)time(NULL));
+    
+    bool play_again = true;
+    
+    printf("Welcome to Lexic - A Word Guessing Game!\n\n");
+    
+    while (play_again) {
+        play_game();
+        
+        char choice;
+        printf("Would you like to play again? (y/n): ");
+        scanf(" %c", &choice);
+        while (getchar() != '\n'); // Clear input buffer
+        
+        play_again = (choice == 'y' || choice == 'Y');
+        
+        if (play_again) {
+            system("clear");
+        }
     }
-
+    
+    printf("Thanks for playing!\n");
     return 0;
 }
