@@ -6,6 +6,13 @@
 
 #define MAX_GUESSES 6
 
+// Add these definitions at the top
+#define RED     "\x1b[31m"
+#define GREEN   "\x1b[32m"
+#define YELLOW  "\x1b[33m"
+#define BLUE    "\x1b[34m"
+#define RESET   "\x1b[0m"
+
 // Word lists moved to global scope
 const char *easy_words[] = {"apple", "banana", "cherry", "date", "fig"};
 const char *medium_words[] = {"apricot", "blueberry", "coconut", "dragonfruit"};
@@ -152,7 +159,7 @@ bool play_game() {
         display_hangman(incorrect_guesses);
         
         // Display the current progress
-        printf("Word: ");
+        printf(YELLOW "Word: " RESET);
         for (size_t i = 0; i < target_length; i++) {
             if (guessed[i])
                 printf("%c", target[i]);
@@ -172,7 +179,7 @@ bool play_game() {
         printf("Incorrect guesses: %d/%d\n", incorrect_guesses, MAX_GUESSES);
 
         // Prompt user for a letter
-        printf("Enter a letter (or '!' to quit): ");
+        printf(BLUE "Enter a letter (or '!' to quit): " RESET);
         char guess;
         scanf(" %c", &guess);
         while (getchar() != '\n'); // Clear input buffer
@@ -225,9 +232,9 @@ bool play_game() {
     display_hangman(incorrect_guesses);
     
     if (word_complete)
-        printf("Congratulations! You guessed the word: %s\n", target);
+        printf(GREEN "Congratulations! You guessed the word: %s\n" RESET, target);
     else
-        printf("Game over! The word was: %s\n", target);
+        printf(RED "Game over! The word was: %s\n" RESET, target);
         
     return true;
 }
