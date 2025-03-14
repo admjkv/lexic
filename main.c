@@ -13,6 +13,8 @@
 #define BLUE    "\x1b[34m"
 #define RESET   "\x1b[0m"
 
+#define MAX_HINTS 3
+
 // Word lists moved to global scope
 const char *easy_words[] = {"apple", "banana", "cherry", "date", "fig"};
 const char *medium_words[] = {"apricot", "blueberry", "coconut", "dragonfruit"};
@@ -151,6 +153,8 @@ bool play_game() {
     int incorrect_guesses = 0;
     bool word_complete = false;
 
+    int hints_remaining = MAX_HINTS;
+
     system("clear"); // Start with a clean screen
 
     // Game loop
@@ -177,9 +181,10 @@ bool play_game() {
         printf("\n");
 
         printf("Incorrect guesses: %d/%d\n", incorrect_guesses, MAX_GUESSES);
+        printf("Hints remaining: %d\n", hints_remaining);
 
         // Prompt user for a letter
-        printf(BLUE "Enter a letter (or '!' to quit): " RESET);
+        printf(BLUE "Enter a letter (or '!' to quit or '?' for a hint): " RESET);
         char guess;
         scanf(" %c", &guess);
         while (getchar() != '\n'); // Clear input buffer
@@ -187,6 +192,32 @@ bool play_game() {
         if (guess == '!') {
             printf("Game aborted. The word was: %s\n", target);
             return false;
+        }
+
+        if (guess == '?' && hints_remaining > 0) {
+            // Provide a hint by revealing a random unguessed letter
+            int unguessed_count = 0;
+            for (size_t i = 0; i < target_length; i++) {
+                if (!guessed[i]) unguessed_count++;
+            }
+            
+            if (unguessed_count > 0) {
+                int hint_index = rand() % unguessed_count;
+                int current = 0;
+                
+                for (size_t i = 0; i < target_length; i++) {
+                    if (!guessed[i]) {
+                        if (current == hint_index) {
+                            guessed[i] = true;
+                            printf("Hint: The word contains the letter '%c'.\n", target[i]);
+                            hints_remaining--;
+                            break;
+                        }
+                        current++;
+                    }
+                }
+            }
+            continue;
         }
 
         // Validation for letter input
