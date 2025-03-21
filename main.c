@@ -6,7 +6,6 @@
 
 #define MAX_GUESSES 6
 
-// Add these definitions at the top
 #define RED     "\x1b[31m"
 #define GREEN   "\x1b[32m"
 #define YELLOW  "\x1b[33m"
@@ -14,6 +13,12 @@
 #define RESET   "\x1b[0m"
 
 #define MAX_HINTS 3
+
+typedef struct {
+    int wins;
+    int losses;
+    int total_games;
+} GameStats;
 
 // Word lists moved to global scope
 const char *easy_words[] = {"apple", "banana", "cherry", "date", "fig", "grape", "kiwi", "lemon", 
