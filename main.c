@@ -196,7 +196,19 @@ bool play_game() {
         printf("Used letters: ");
         for (char c = 'a'; c <= 'z'; c++) {
             if (used_letters[c - 'a']) {
-                printf("%c ", c);
+                // Check if this letter appears in the target word
+                bool in_word = false;
+                for (size_t i = 0; i < target_length; i++) {
+                    if (target[i] == c) {
+                        in_word = true;
+                        break;
+                    }
+                }
+                if (in_word) {
+                    printf(GREEN "%c " RESET, c);
+                } else {
+                    printf(RED "%c " RESET, c);
+                }
             }
         }
         printf("\n");
