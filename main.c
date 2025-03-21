@@ -265,7 +265,9 @@ bool play_game() {
 
         if (!correct) {
             incorrect_guesses++;
-            printf("Incorrect guess! You have %d guesses left.\n", MAX_GUESSES - incorrect_guesses);
+            printf(RED "Incorrect guess! You have %d guesses left.\n" RESET, MAX_GUESSES - incorrect_guesses);
+        } else {
+            printf(GREEN "Good guess! '%c' is in the word.\n" RESET, guess);
         }
 
         // Check if the whole word is guessed
