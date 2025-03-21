@@ -16,9 +16,12 @@
 #define MAX_HINTS 3
 
 // Word lists moved to global scope
-const char *easy_words[] = {"apple", "banana", "cherry", "date", "fig"};
-const char *medium_words[] = {"apricot", "blueberry", "coconut", "dragonfruit"};
-const char *hard_words[] = {"elderberry", "jackfruit", "persimmon", "rambutan"};
+const char *easy_words[] = {"apple", "banana", "cherry", "date", "fig", "grape", "kiwi", "lemon", 
+                           "mango", "melon", "olive", "orange", "peach", "pear", "plum"};
+const char *medium_words[] = {"apricot", "blueberry", "coconut", "dragonfruit", "guava", "kumquat", 
+                             "papaya", "pineapple", "raspberry", "strawberry", "tangerine", "watermelon"};
+const char *hard_words[] = {"elderberry", "jackfruit", "persimmon", "rambutan", "blackberry", 
+                           "blackcurrant", "boysenberry", "gooseberry", "lychee", "mulberry", "pomegranate"};
 
 // Function to display hangman ASCII art
 void display_hangman(int incorrect_guesses) {
