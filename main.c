@@ -156,7 +156,20 @@ bool play_game() {
     int incorrect_guesses = 0;
     bool word_complete = false;
 
-    int hints_remaining = MAX_HINTS;
+    int hints_remaining;
+    switch(difficulty) {
+        case 1: // Easy
+            hints_remaining = 3;
+            break;
+        case 2: // Medium
+            hints_remaining = 2;
+            break;
+        case 3: // Hard
+            hints_remaining = 1;
+            break;
+        default:
+            hints_remaining = 2;
+    }
 
     system("clear"); // Start with a clean screen
 
